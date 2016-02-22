@@ -70,6 +70,7 @@ function love.update(dt)
   if love.keyboard.isDown('space') then
     start = false
   end
+
   if love.keyboard.isDown('escape') then
     start = true
   end
@@ -164,11 +165,11 @@ function love.draw()
   end
 
 function love.mousereleased(x, y, button) gooi.released() end
-function love.mousepressed(x, y, button)  gooi.pressed() end
+function love.mousepressed(x, y, button)  gooi.pressed() start = false end
 
 --enable this for touch support MAY GIVE ERRORS ON DESKTOP
 
-function love.touchmoved(id, x, y, pressure) gooi.moved(id, x, y) end
+function love.touchmoved(id, x, y, pressure) gooi.moved(id, x, y) start = false end
 function love.touchpressed(id, x, y, pressure) gooi.pressed(id, x, y) end
 function love.touchreleased(id, x, y, pressure) gooi.released(id, x, y) end
 
