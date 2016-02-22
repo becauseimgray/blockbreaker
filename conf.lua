@@ -1,3 +1,4 @@
+
 function love.conf(t)
     t.identity = nil                    -- The name of the save directory (string)
     t.version = "0.10.0"                -- The LÖVE version this game was made for (string)                 -- Attach a console (boolean, Windows only)
@@ -10,7 +11,7 @@ function love.conf(t)
     t.window.width = 1024               -- The window width (number)
     t.window.height = 768               -- The window height (number)
     t.window.borderless = false         -- Remove all border visuals from the window (boolean)
-    t.window.resizable = false          -- Let the window be user-resizable (boolean)
+    t.window.resizable = true          -- Let the window be user-resizable (boolean)
     t.window.minwidth = 1               -- Minimum window width if the window is resizable (number)
     t.window.minheight = 1              -- Minimum window height if the window is resizable (number)
     t.window.fullscreen = false         -- Enable fullscreen (boolean)
@@ -38,4 +39,10 @@ function love.conf(t)
     t.modules.video = true              -- Enable the video module (boolean)
     t.modules.window = true             -- Enable the window module (boolean)
     t.modules.thread = true             -- Enable the thread module (boolean)
+
+    --android settings
+    t.android_allow_screensleep = true
+    t.android_native_screen = true
+    t.accelerometerjoystick = true
+
 end

@@ -2,15 +2,21 @@ lick = require "lick"
 lick.reset = true -- reload the love.load everytime you save
 require "TEsound"
 require "map1"
+--requirements for android gui
+require "gooi/gooi"
+require "gooi/component"
+require "gooi/layout"
 
 local rect1 = {}
 local ball = {}
 local screen = {}
 
 function love.load()
+  --load android functions
+  pGame = gooi.newPanel("panelGameLayout", 20, 500, 200, 200, "game")
+  pGame:add(gooi.newJoy("joy_1"), "b-l")-- Bottom-left
 
-  screen.width = 1024
-  screen.height = 768
+  screen.width, screen.height, screen.flags = love.window.getMode()
 
   titlebar = {}
   titlebar.x, titlebar.y = 0,0
@@ -59,6 +65,7 @@ end
 
 function love.update(dt)
   TEsound.cleanup()
+  gooi.update(dt)
 
   if love.keyboard.isDown('space') then
     start = false
@@ -66,6 +73,7 @@ function love.update(dt)
   if love.keyboard.isDown('escape') then
     start = true
   end
+
     -- controls for dock
   if love.keyboard.isDown('d') then
     rect1.x = rect1.x + (rect1.speed * dt)
@@ -73,6 +81,9 @@ function love.update(dt)
   if love.keyboard.isDown('a') then
     rect1.x = rect1.x - (rect1.speed * dt)
   end
+
+  --android controls
+    rect1.x = rect1.x + rect1.speed * gooi.get("joy_1"):xValue() * dt
 
 
   -- collision for dock
@@ -130,6 +141,8 @@ function love.update(dt)
 end
 
 function love.draw()
+  gooi.draw()
+
   --love.graphics.setColor(0, 0, 0, 255)
   titlebar.bar = love.graphics.rectangle("line", titlebar.x, titlebar.y,titlebar.w, titlebar.h)
   love.graphics.print(points, 10, 10)
@@ -149,5 +162,17 @@ function love.draw()
   if start == false then
     love.graphics.circle('fill', ball.x,ball.y, ball.h, ball.w)
   end
+
+function love.mousereleased(x, y, button) gooi.released() end
+function love.mousepressed(x, y, button)  gooi.pressed() end
+
+--enable this for touch support MAY GIVE ERRORS ON DESKTOP
+
+function love.touchmoved(id, x, y, pressure) gooi.moved(id, x, y) end
+function love.touchpressed(id, x, y, pressure) gooi.pressed(id, x, y) end
+function love.touchreleased(id, x, y, pressure) gooi.released(id, x, y) end
+
+
+
 
 end
