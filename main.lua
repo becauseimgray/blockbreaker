@@ -37,12 +37,10 @@ function love.load()
   ball.speed = 500
   ball.speedx = -ball.speed
   ball.speedy = ball.speed
-  ball.velocity = ball.speed + rect1.speed
+  --ball.velocity = ball.speed + rect1.speed
 
   startmsg = love.graphics.newImage("images/startmsg.png")
   start = true
-  alpha = 255
-  --sounds
   list = {
     "audio/sound1.wav",
     "audio/sound2.wav",
@@ -55,7 +53,8 @@ function love.load()
     "audio/sound9.wav",
     "audio/sound10.wav",
   } --loads sounds and puts them into a list for TEsound work with
-      map1.load() --level loading
+    --loads map, atm there is only one map
+      map1.load()
 end
 
 -- Creating Collision Function for later usage
@@ -77,6 +76,7 @@ function love.update(dt)
 
   if love.keyboard.isDown('escape') then
     start = true
+    map1.reset()
   end
 
     -- controls for dock
@@ -101,12 +101,12 @@ function love.update(dt)
   if rect1.x >= screen.width then
     rect1.x = screen.width - rect1.width
   end
-  if rect1.y > screen.height then
+  if (rect1.y + rect1.width) > screen.height then
     rect1.y = screen.height - rect1.height
   end
   --ball movement
-  ball.x = ball.x + (ball.speedx * dt)
-  ball.y = ball.y + (ball.speedy * dt)
+  ball.x = ball.x + ball.speedx * dt
+  ball.y = ball.y + ball.speedy * dt
 
   if ball.y < 0 then
       ball.speedy = math.abs(ball.speedy)
@@ -125,8 +125,6 @@ function love.update(dt)
   elseif (ball.x + ball.w) > screen.width  then
       ball.speedx = -math.abs(ball.speedx)
   end
-  --updates level
-  map1.update(dt, ball)
 
   if CheckCollision(rect1.x,rect1.y,rect1.width,rect1.height,
     ball.x, ball.y, ball.w, ball.h) then
@@ -139,13 +137,15 @@ function love.update(dt)
     ball.speedy = math.abs(ball.speedy)
   end
   --debugging points
-  if love.keyboard.isDown(']') then
+  --[[if love.keyboard.isDown(']') then
     points = points + 1
-  end
+  end]]--
 end
 
 function love.draw()
   gooi.draw()
+  map1.draw(ball, rect1, list, screen)
+
 
   --love.graphics.setColor(0, 0, 0, 255)
 
@@ -167,8 +167,7 @@ function love.draw()
   end
 
     love.graphics.rectangle('fill', rect1.x, rect1.y, rect1.width,rect1.height)
-    --draws level
-        map1.draw()
+    --draws level and does updates
   if start == false then
     love.graphics.circle('fill', ball.x,ball.y, ball.h, ball.w)
   end
