@@ -10,6 +10,11 @@ require "gooi/layout"
 local rect1 = {}
 local ball = {}
 local screen = {}
+numOfLives = 3
+
+--map loading
+local map1bool = false
+local map2bool = false
 
 function love.load()
   --load android functions
@@ -41,6 +46,7 @@ function love.load()
 
   startmsg = love.graphics.newImage("images/startmsg.png")
   start = true
+  deathsnd = "audio/death.wav"
   list = {
     "audio/sound1.wav",
     "audio/sound2.wav",
@@ -114,6 +120,8 @@ function love.update(dt)
     ball.speedy = -math.abs(ball.speedy)
     start = true
     map1.reset(true)
+    numOfLives = numOfLives - 1
+    TEsound.play(deathsnd)
     if points >= highscore then
       highscore = points
     end
@@ -154,10 +162,29 @@ function love.draw()
   love.graphics.print("HS:" .. highscore, screen.width - 300, 10)
   love.graphics.setColor(255, 255, 255, 255)
 
+  --lives
+  if numOfLives == 3 then
+  love.graphics.circle("fill", screen.width / 2 - 50, titlebar.h / 2, 10,10)
+  love.graphics.circle("fill", screen.width / 2,      titlebar.h / 2, 10,10)
+  love.graphics.circle("fill", screen.width / 2 + 50, titlebar.h / 2, 10,10)
+elseif numOfLives == 2 then
+  love.graphics.circle("fill", screen.width / 2,      titlebar.h / 2, 10,10)
+  love.graphics.circle("fill", screen.width / 2 + 50, titlebar.h / 2, 10,10)
+elseif numOfLives == 1 then
+love.graphics.circle("fill", screen.width / 2,      titlebar.h / 2, 10,10)
+end
+if numOfLives == 0 then
+  start = true
+  map1.reset(true)
+  numOfLives = 3
+end
   if start then
     --ball starting location
-    ball.x = screen.width / 2, screen.height / 2
-    ball.y = screen.width / 2, screen.height / 2
+      --print("X: " .. ball.x .."Y: " .. ball.y)
+    ball.x = 0
+    ball.y = 80
+      --ball.x = screen.width / 2, screen.height / 2
+      --ball.y = screen.width / 2, screen.height / 2
     --font setup
     love.graphics.setColor(255,255,255, alpha)
     font = love.graphics.newFont("fonts/Vera.ttf", 50)
