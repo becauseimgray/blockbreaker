@@ -119,7 +119,9 @@ function love.update(dt)
   elseif (ball.y + ball.h) > screen.height then
     ball.speedy = -math.abs(ball.speedy)
     start = true
-    map1.reset(true)
+    if numOfLives == 0 then
+      map1.reset(true)
+    end
     numOfLives = numOfLives - 1
     TEsound.play(deathsnd)
     if points >= highscore then
